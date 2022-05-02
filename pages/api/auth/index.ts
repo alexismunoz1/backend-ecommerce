@@ -5,3 +5,5 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
    const result = await sendCode(req.body.email);
    res.send(result);
 }
+
+//ale
