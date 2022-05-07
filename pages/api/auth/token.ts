@@ -17,5 +17,5 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       });
    }
    const token = generate({ userId: auth.data.userId });
-   res.send({ token });
+   res.status(200).send({ token });
 }
