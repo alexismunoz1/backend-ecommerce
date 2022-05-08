@@ -18,6 +18,12 @@ export class User {
 
    async push() {
       await this.ref.update(this.data);
+      // await this.ref.set({
+      //    ...this.data,
+      //    nwedata
+      // }, {
+      //    merge: true
+      // });
    }
 
    static async createNewUser(data) {

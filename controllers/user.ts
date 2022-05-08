@@ -19,3 +19,18 @@ export async function updateUserData(id: string, data: userData) {
    await user.pull();
    return user.data;
 }
+
+type userAddress = {
+   email?: string;
+   userName?: string;
+   userPhone?: number;
+   userAddress?: string;
+};
+
+export async function updateUserAddress(id: string, newData: userAddress) {
+   const user = new User(id);
+   user.data = newData;
+   await user.push();
+   await user.pull();
+   return user.data;
+}

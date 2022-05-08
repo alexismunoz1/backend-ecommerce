@@ -2,6 +2,7 @@ import { Auth } from "models/auth";
 import { User } from "models/user";
 import gen from "random-seed";
 import addMinutes from "date-fns/addMinutes";
+import { generate } from "lib/jwt";
 
 var seed = "My Secret Seed";
 var random = gen.create(seed);
@@ -41,4 +42,19 @@ export async function sendCode(email: string) {
    console.log(`Sending code ${code} to ${email}`);
    await auth.push();
    return true;
+}
+
+export async function checkCode(email: string, code: number) {
+   const auth = await Auth.findByEmail(email);
+   if (!auth) {
+      throw "email y código incorrectos";
+   }
+
+   const expired = auth.isCodeExpired();
+   if (expired) {
+      throw "código expirado";
+   }
+
+   const token = generate({ userId: auth.data.userId });
+   return token;
 }

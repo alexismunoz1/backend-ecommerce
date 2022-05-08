@@ -1,21 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { generate } from "lib/jwt";
-import { Auth } from "models/auth";
+import { checkCode } from "controllers/auth";
+import method from "micro-method-router";
+import * as yup from "yup";
+import { authMiddleware } from "lib/middlewares";
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
-   const auth = await Auth.findByEmailAndCode(req.body.email, req.body.code);
-   if (!auth) {
-      res.status(401).send({
-         message: "email y code incorrectos",
-      });
-   }
+const bodySchema = yup.object().shape({
+   email: yup.string().email().required(),
+   code: yup.number().required(),
+});
 
-   const expires = auth.isCodeExpired();
-   if (expires) {
-      res.status(401).send({
-         message: "code expired",
-      });
+// permite verificar si el codigo enviado al email de user es correcto
+export async function postHandler(req: NextApiRequest, res: NextApiResponse) {
+   try {
+      await bodySchema.validate(req.body);
+      const { email, code } = req.body;
+      const token = await checkCode(email, code);
+      res.status(200).send({ token });
+   } catch (err) {
+      res.status(400).send({ message: err });
    }
-   const token = generate({ userId: auth.data.userId });
-   res.status(200).send({ token });
 }
+
+const handler = method({
+   post: postHandler,
+});
+
+export default handler;
