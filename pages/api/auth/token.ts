@@ -2,14 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { checkCode } from "controllers/auth";
 import method from "micro-method-router";
 import * as yup from "yup";
-import { authMiddleware } from "lib/middlewares";
 
 const bodySchema = yup.object().shape({
    email: yup.string().email().required(),
    code: yup.number().required(),
 });
 
-// permite verificar si el codigo enviado al email de user es correcto
+// permite verificar si el codigo (enviado al email de user) es correcto
 export async function postHandler(req: NextApiRequest, res: NextApiResponse) {
    try {
       await bodySchema.validate(req.body);

@@ -3,9 +3,9 @@ import { User } from "models/user";
 import gen from "random-seed";
 import addMinutes from "date-fns/addMinutes";
 import { generate } from "lib/jwt";
+import { sendEmail } from "lib/sendgrid";
 
-var seed = "My Secret Seed";
-var random = gen.create(seed);
+var random = gen.create(process.env.SECRET_SEED);
 
 export async function findOrCreateAuth(email: string): Promise<Auth> {
    const cleanEmail = email.trim().toLowerCase();
@@ -40,6 +40,7 @@ export async function sendCode(email: string) {
    auth.data.expires = expires;
 
    console.log(`Sending code ${code} to ${email}`);
+   await sendEmail(email, code);
    await auth.push();
    return true;
 }
