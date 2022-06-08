@@ -1,32 +1,35 @@
 import { firestore } from "lib/firestore";
 
 const collection = firestore.collection("user");
+
+type userData = {
+   [x: string]: string | number | undefined;
+   email?: string;
+   userAddress?: string;
+   userName?: string;
+   userPhone?: number;
+};
+
 export class User {
    ref: FirebaseFirestore.DocumentReference;
-   data: FirebaseFirestore.DocumentData;
+   data: FirebaseFirestore.DocumentData | any;
    id: string;
 
-   constructor(id) {
+   constructor(id: string) {
       this.id = id;
       this.ref = collection.doc(id);
    }
 
-   async pull() {
+   async pull(): Promise<void> {
       const snap = await this.ref.get();
       this.data = snap.data();
    }
 
-   async push() {
+   async push(): Promise<void> {
       await this.ref.update(this.data);
-      // await this.ref.set({
-      //    ...this.data,
-      //    nwedata
-      // }, {
-      //    merge: true
-      // });
    }
 
-   static async createNewUser(data) {
+   static async createNewUser(data: userData): Promise<User> {
       const newUserSnap = await collection.add(data);
       const newUser = new User(newUserSnap.id);
       newUser.data = data;

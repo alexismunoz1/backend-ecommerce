@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import method from "micro-method-router";
-import { sendCode } from "controllers/auth";
+import { sendCode } from "controllers/authController";
 import * as yup from "yup";
 
 const bodySchema = yup.object().shape({

@@ -1,40 +1,46 @@
 import { firestore } from "lib/firestore";
 import isAfter from "date-fns/isAfter";
 
+type authData = {
+   [x: string]: string | Date | undefined;
+   email?: string;
+   userId?: string;
+   code?: string;
+   expires?: Date;
+};
+
 const collection = firestore.collection("auth");
 export class Auth {
    ref: FirebaseFirestore.DocumentReference;
-   data: FirebaseFirestore.DocumentData;
+   data: FirebaseFirestore.DocumentData | any;
    id: string;
 
-   constructor(id) {
+   constructor(id: string) {
       this.id = id;
       this.ref = collection.doc(id);
    }
 
-   async pull() {
+   async pull(): Promise<void> {
       const snap = await this.ref.get();
       this.data = snap.data();
    }
 
-   async push() {
+   async push(): Promise<void> {
       await this.ref.update(this.data);
    }
 
-   isCodeExpired() {
+   isCodeExpired(): boolean {
       const now = new Date();
       const expires = this.data.expires.toDate();
-      console.log({ now });
-      console.log({ expires });
 
       return isAfter(now, expires);
    }
 
-   static cleanEmail(email: string) {
+   static cleanEmail(email: string): string {
       return email.trim().toLowerCase();
    }
 
-   static async findByEmail(email: string) {
+   static async findByEmail(email: string): Promise<Auth | null> {
       const cleanEmail = Auth.cleanEmail(email);
       const result = await collection.where("email", "==", cleanEmail).get();
 
@@ -47,14 +53,14 @@ export class Auth {
       }
    }
 
-   static async createNewAuth(data) {
+   static async createNewAuth(data: authData): Promise<Auth> {
       const newUserSnap = await collection.add(data);
       const newUser = new Auth(newUserSnap.id);
       newUser.data = data;
       return newUser;
    }
 
-   static async findByEmailAndCode(email: string, code: number) {
+   static async findByEmailAndCode(email: string, code: number): Promise<Auth | null> {
       const cleanEmail = Auth.cleanEmail(email);
       const result = await collection
          .where("email", "==", cleanEmail)
@@ -62,7 +68,6 @@ export class Auth {
          .get();
 
       if (result.empty) {
-         console.error("Email and code do not match");
          return null;
       } else {
          const doc = result.docs[0];

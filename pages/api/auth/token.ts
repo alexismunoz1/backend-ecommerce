@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { checkCode } from "controllers/auth";
+import { checkCode } from "controllers/authController";
 import method from "micro-method-router";
 import * as yup from "yup";
 
