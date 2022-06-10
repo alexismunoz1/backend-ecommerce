@@ -4,7 +4,7 @@ import { authMiddleware } from "utils/middlewares";
 import method from "micro-method-router";
 import * as yup from "yup";
 
-async function getHandler(req: NextApiRequest, res: NextApiResponse) {
+async function get(req: NextApiRequest, res: NextApiResponse) {
    const { query, offset, limit } = req.query;
    try {
       const products = await searchProductByName(
@@ -18,8 +18,6 @@ async function getHandler(req: NextApiRequest, res: NextApiResponse) {
    }
 }
 
-const handler = method({
-   get: getHandler,
-});
+const handler = method({ get });
 
 export default authMiddleware(handler);

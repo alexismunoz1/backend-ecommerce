@@ -9,7 +9,7 @@ const bodySchema = yup.object().shape({
 
 // permite enviar un codigo de verificacion a un email
 // si en la db no existe un user con ese email, se crea uno
-export async function postHandler(req: NextApiRequest, res: NextApiResponse) {
+export async function post(req: NextApiRequest, res: NextApiResponse) {
    try {
       await bodySchema.validate(req.body);
       const { email } = req.body;
@@ -20,8 +20,6 @@ export async function postHandler(req: NextApiRequest, res: NextApiResponse) {
    }
 }
 
-const handler = method({
-   post: postHandler,
-});
+const handler = method({ post });
 
 export default handler;

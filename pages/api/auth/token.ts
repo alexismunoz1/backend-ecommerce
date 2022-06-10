@@ -9,7 +9,7 @@ const bodySchema = yup.object().shape({
 });
 
 // permite verificar si el codigo (enviado al email de user) es correcto
-export async function postHandler(req: NextApiRequest, res: NextApiResponse) {
+export async function post(req: NextApiRequest, res: NextApiResponse) {
    try {
       await bodySchema.validate(req.body);
       const { email, code } = req.body;
@@ -20,8 +20,6 @@ export async function postHandler(req: NextApiRequest, res: NextApiResponse) {
    }
 }
 
-const handler = method({
-   post: postHandler,
-});
+const handler = method({ post });
 
 export default handler;

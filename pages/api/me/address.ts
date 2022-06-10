@@ -16,7 +16,7 @@ let bodySchema = yup
    .strict();
 
 //permite actualizar un dato puntual de un usuario
-async function patchHandler(
+async function patch(
    req: NextApiRequest,
    res: NextApiResponse,
    token: { userId: string }
@@ -31,8 +31,6 @@ async function patchHandler(
    }
 }
 
-const handler = method({
-   patch: patchHandler,
-});
+const handler = method({ patch });
 
 export default authMiddleware(handler);
