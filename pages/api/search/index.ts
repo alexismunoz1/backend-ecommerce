@@ -4,9 +4,20 @@ import { authMiddleware } from "utils/middlewares";
 import method from "micro-method-router";
 import * as yup from "yup";
 
+const querySchema = yup
+   .object()
+   .shape({
+      query: yup.string().required(),
+      limit: yup.string().required(),
+      offset: yup.string().required(),
+   })
+   .noUnknown(true)
+   .strict();
+
 async function get(req: NextApiRequest, res: NextApiResponse) {
    const { query, offset, limit } = req.query;
    try {
+      await querySchema.validate(req.query);
       const products = await searchProductByName(
          query as string,
          limit as string,

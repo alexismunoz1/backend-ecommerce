@@ -21,3 +21,8 @@ export async function searchProductByName(search: string, limit: string, offset:
 
    return { total: hits.length, hits };
 }
+
+export async function getProductById(id: string) {
+   const ressult = await productsIndex.getObject(id);
+   return ressult;
+}
