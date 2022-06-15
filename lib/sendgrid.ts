@@ -1,6 +1,7 @@
 import * as sgMail from "@sendgrid/mail";
+const { SENDGRID_API_KEY } = process.env;
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+sgMail.setApiKey(SENDGRID_API_KEY as string);
 
 export async function sendEmail(to: string, code: number): Promise<void> {
    return await sgMail

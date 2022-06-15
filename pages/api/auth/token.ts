@@ -11,15 +11,12 @@ const bodySchema = yup.object().shape({
 // permite verificar si el codigo (enviado al email de user) es correcto
 export async function post(req: NextApiRequest, res: NextApiResponse) {
    try {
-      await bodySchema.validate(req.body);
-      const { email, code } = req.body;
+      const { email, code } = await bodySchema.validate(req.body);
       const token = await checkCode(email, code);
       res.status(200).send({ token });
    } catch (err) {
-      res.status(400).send({ message: err });
+      res.status(400).send({ err });
    }
 }
 
-const handler = method({ post });
-
-export default handler;
+export default method({ post });

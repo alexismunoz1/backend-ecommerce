@@ -4,18 +4,8 @@ import { getUserById, updateUserData } from "controllers/userController";
 import method from "micro-method-router";
 import * as yup from "yup";
 
-const bodyPatchSchema = yup.object().shape({
-   userName: yup.string().required(),
-   userPhone: yup.number().required(),
-   userAddress: yup.string().required(),
-});
-
 // permite obtener un usuario con su data mediante su id
-async function getHandler(
-   req: NextApiRequest,
-   res: NextApiResponse,
-   token: { userId: string }
-) {
+async function get(req: NextApiRequest, res: NextApiResponse, token: { userId: string }) {
    try {
       const userData = await getUserById(token.userId);
       res.status(200).send(userData);
@@ -24,15 +14,20 @@ async function getHandler(
    }
 }
 
+const bodyPatchSchema = yup.object().shape({
+   userName: yup.string().required(),
+   userPhone: yup.number().required(),
+   userAddress: yup.string().required(),
+});
+
 // permite agregar los datos faltantes (name, phone, address) al usuario
-async function patchHandler(
+async function patch(
    req: NextApiRequest,
    res: NextApiResponse,
    token: { userId: string }
 ) {
    try {
-      await bodyPatchSchema.validate(req.body);
-      const userData = req.body;
+      const userData = await bodyPatchSchema.validate(req.body);
       const user = await updateUserData(token.userId, userData);
       res.status(200).send(user);
    } catch (err) {
@@ -40,9 +35,7 @@ async function patchHandler(
    }
 }
 
-const handler = method({
-   get: getHandler,
-   patch: patchHandler,
+export default method({
+   get: authMiddleware(get),
+   patch: authMiddleware(patch),
 });
-
-export default authMiddleware(handler);

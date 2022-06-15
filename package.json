@@ -13,6 +13,7 @@
       "algoliasearch": "^4.13.0",
       "date-fns": "^2.28.0",
       "firebase-admin": "^10.1.0",
+      "mercadopago": "^1.5.13",
       "micro-method-router": "^0.1.0",
       "next": "^12.1.0",
       "parse-bearer-token": "^1.0.1",
@@ -22,6 +23,7 @@
       "yup": "^0.32.11"
    },
    "devDependencies": {
+      "@types/mercadopago": "^1.5.6",
       "@types/node": "^17.0.22",
       "typescript": "^4.6.2"
    }

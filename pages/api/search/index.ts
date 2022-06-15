@@ -15,20 +15,13 @@ const querySchema = yup
    .strict();
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-   const { query, offset, limit } = req.query;
    try {
-      await querySchema.validate(req.query);
-      const products = await searchProductByName(
-         query as string,
-         limit as string,
-         offset as string
-      );
-      res.status(200).json(products);
-   } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      const searchData = await querySchema.validate(req.query);
+      const { total, products } = await searchProductByName(searchData);
+      res.status(200).json({ total, products });
+   } catch (err) {
+      res.status(500).json({ err });
    }
 }
 
-const handler = method({ get });
-
-export default authMiddleware(handler);
+export default method({ get: authMiddleware(get) });

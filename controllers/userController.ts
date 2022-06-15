@@ -34,3 +34,8 @@ export async function updateUserAddress(id: string, newData: userAddress) {
    await user.pull();
    return user.data;
 }
+
+export async function saveOrderInUser(userId: string, order_id: string) {
+   const user = new User(userId);
+   user.saveNewOrder(order_id);
+}

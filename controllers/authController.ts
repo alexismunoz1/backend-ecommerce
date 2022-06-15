@@ -1,9 +1,9 @@
 import { Auth } from "models/auth";
 import { User } from "models/user";
-import gen from "random-seed";
-import addMinutes from "date-fns/addMinutes";
 import { generate } from "lib/jsonwebtoken";
 import { sendEmail } from "lib/sendgrid";
+import addMinutes from "date-fns/addMinutes";
+import gen from "random-seed";
 
 export async function findOrCreateAuth(email: string): Promise<Auth> {
    const cleanEmail = email.trim().toLowerCase();

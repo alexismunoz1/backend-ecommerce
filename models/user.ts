@@ -12,7 +12,7 @@ type userData = {
 
 export class User {
    ref: FirebaseFirestore.DocumentReference;
-   data: FirebaseFirestore.DocumentData | any;
+   data: FirebaseFirestore.DocumentReference | any;
    id: string;
 
    constructor(id: string) {
@@ -34,5 +34,16 @@ export class User {
       const newUser = new User(newUserSnap.id);
       newUser.data = data;
       return newUser;
+   }
+
+   async saveNewOrder(orderId: string): Promise<void> {
+      await this.pull();
+      this.data.userOrders = {
+         ...this.data.userOrders,
+         [orderId]: {
+            createdAt: new Date(),
+         },
+      };
+      await this.push();
    }
 }

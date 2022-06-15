@@ -22,8 +22,7 @@ async function patch(
    token: { userId: string }
 ) {
    try {
-      await bodySchema.validate(req.body);
-      const userData = req.body;
+      const userData = await bodySchema.validate(req.body);
       const resUserData = await updateUserAddress(token.userId, userData);
       res.status(200).send(resUserData);
    } catch (err) {
@@ -31,6 +30,4 @@ async function patch(
    }
 }
 
-const handler = method({ patch });
-
-export default authMiddleware(handler);
+export default method({ patch: authMiddleware(patch) });
