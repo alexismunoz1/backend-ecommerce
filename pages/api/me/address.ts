@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { authMiddleware } from "utils/middlewares";
-import { updateUserAddress } from "controllers/userController";
 import method from "micro-method-router";
+import { updateUserAddress } from "controllers/userController";
 import * as yup from "yup";
 
 let bodySchema = yup

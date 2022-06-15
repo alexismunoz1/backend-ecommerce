@@ -1,5 +1,6 @@
 import { Order } from "models/order";
-import { createPreference } from "lib/mercadopago";
+import { User } from "models/user";
+import { createPreference, getMerchantOrder } from "lib/mercadopago";
 import { getProductById } from "controllers/productsController";
 import { saveOrderInUser } from "controllers/userController";
 
@@ -14,7 +15,7 @@ export async function createOrder(orderData: OrderData): Promise<string> {
 
    const { ["Unit cost"]: unit_price, Name, Images } = await getProductById(productId);
 
-   const orderId = await Order.createNewOrder({
+   const { external_reference } = await Order.createNewOrder({
       aditionalInfo, //datos adicionales de la compra
       productId, // que compara
       userId, // quien compra
@@ -23,10 +24,10 @@ export async function createOrder(orderData: OrderData): Promise<string> {
       unit_price, // precio de la compra
    });
 
-   await saveOrderInUser(userId, orderId); // se guarda la order en el usuario
+   await saveOrderInUser(userId, external_reference); // se guarda la order en el usuario
 
    const preference: Preference = {
-      external_reference: orderId,
+      external_reference,
       items: [
          {
             title: Name,
@@ -36,7 +37,7 @@ export async function createOrder(orderData: OrderData): Promise<string> {
             unit_price,
          },
       ],
-      notification_url: "url-webhook-ipn",
+      notification_url: "https://backend-ecommerce-tau.vercel.app/ipn/mercadopago",
       back_urls: {
          success: "url-success",
          pending: "url-pending",
@@ -50,4 +51,15 @@ export async function createOrder(orderData: OrderData): Promise<string> {
 
 export async function getOrderById(id: string) {
    return await Order.getOrder(id);
+}
+
+export async function updateOrderStatus(id: string) {
+   const order = await getMerchantOrder(id);
+   if (order.order_status == "paid") {
+      const orderId = order.external_reference;
+      const myOrder = new Order(orderId);
+      await myOrder.pull();
+      myOrder.data.status = "closed";
+      await myOrder.push();
+   }
 }

@@ -30,15 +30,25 @@ export class Order {
       this.ref.update(this.data);
    }
 
-   static async createNewOrder(newOrderData: OrderData): Promise<string> {
+   static async createNewOrder(newOrderData: OrderData): Promise<{
+      external_reference: string;
+   }> {
       const newOrderSnap = await collection.add(newOrderData);
       const newOrder = new Order(newOrderSnap.id);
       newOrder.data = newOrderData;
-      return newOrder.id;
+      return {
+         external_reference: newOrder.id,
+      };
    }
 
    static async getOrder(id: string) {
       const order = await collection.doc(id).get();
       return order.data();
+   }
+
+   async updateStatus(status: "pending" | "success" | "failure") {
+      await this.pull();
+      this.data.status = status;
+      await this.push();
    }
 }
