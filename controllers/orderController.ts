@@ -19,11 +19,11 @@ export async function createOrder(orderData: OrderData): Promise<string> {
       productId, // que compara
       userId, // quien compra
       status: "pending", // estado de la compra
-      createdAt: new Date(), // cuando se creo la compra
+      createdAt: new Date().toLocaleString(), // cuando se creo la compra
       unit_price, // precio de la compra
    });
 
-   await saveOrderInUser(userId, orderId);
+   await saveOrderInUser(userId, orderId); // se guarda la order en el usuario
 
    const preference: Preference = {
       external_reference: orderId,
@@ -45,6 +45,9 @@ export async function createOrder(orderData: OrderData): Promise<string> {
    };
 
    const { init_point } = await createPreference(preference);
-
    return init_point;
+}
+
+export async function getOrderById(id: string) {
+   return await Order.getOrder(id);
 }

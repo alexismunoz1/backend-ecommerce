@@ -7,7 +7,9 @@ type Token = {
    iat: number;
 };
 
-export function authMiddleware(callback: Function): Function {
+export function authMiddleware(
+   callback: Function
+): (req: NextApiRequest, res: NextApiResponse) => void {
    return function (req: NextApiRequest, res: NextApiResponse) {
       try {
          const token = parseBearerToken(req);

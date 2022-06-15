@@ -1,11 +1,12 @@
 import { firestore } from "lib/firestore";
+import { DateLocale } from "yup/lib/locale";
 
 type OrderData = {
    aditionalInfo?: Record<string, string | string[] | number>;
    productId: string;
    userId: string;
    status: "pending" | "success" | "failure";
-   createdAt: Date;
+   createdAt: string;
    unit_price: number;
 };
 
@@ -34,5 +35,10 @@ export class Order {
       const newOrder = new Order(newOrderSnap.id);
       newOrder.data = newOrderData;
       return newOrder.id;
+   }
+
+   static async getOrder(id: string) {
+      const order = await collection.doc(id).get();
+      return order.data();
    }
 }
