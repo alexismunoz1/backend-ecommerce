@@ -16,4 +16,4 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
    }
 }
 
-export default method({ post: authMiddleware(post) });
+export default method({ post });

@@ -55,11 +55,5 @@ export async function getOrderById(id: string) {
 
 export async function updateOrderStatus(id: string) {
    const order = await getMerchantOrder(id);
-   if (order.order_status == "paid") {
-      const orderId = order.external_reference;
-      const myOrder = new Order(orderId);
-      await myOrder.pull();
-      myOrder.data.status = "closed";
-      await myOrder.push();
-   }
+   console.log({ order });
 }
