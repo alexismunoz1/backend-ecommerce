@@ -14,6 +14,7 @@ export async function findOrCreateAuth(email: string): Promise<Auth> {
    } else {
       const newUser = await User.createNewUser({
          email: cleanEmail,
+         userOrders: [],
       });
 
       const newAuth = await Auth.createNewAuth({

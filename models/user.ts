@@ -3,11 +3,12 @@ import { firestore } from "lib/firestore";
 const collection = firestore.collection("user");
 
 type userData = {
-   [x: string]: string | number | undefined;
+   [x: string]: string | string[] | number | undefined;
    email?: string;
    userAddress?: string;
    userName?: string;
    userPhone?: number;
+   userOrders: string[];
 };
 
 export class User {
@@ -38,12 +39,7 @@ export class User {
 
    async saveNewOrder(orderId: string): Promise<void> {
       await this.pull();
-      this.data.userOrders = {
-         ...this.data.userOrders,
-         [orderId]: {
-            createdAt: new Date(),
-         },
-      };
+      this.data.userOrders.push(orderId);
       await this.push();
    }
 }
