@@ -8,7 +8,6 @@ type userData = {
    userAddress?: string;
    userName?: string;
    userPhone?: number;
-   userOrders: string[];
 };
 
 export class User {
@@ -39,7 +38,13 @@ export class User {
 
    async saveNewOrder(orderId: string): Promise<void> {
       await this.pull();
-      this.data.userOrders.push(orderId);
+      this.data.userOrders = {
+         ...this.data.userOrders,
+         [orderId]: {
+            status: "pending",
+            createdAt: new Date().toLocaleString(),
+         },
+      };
       await this.push();
    }
 }

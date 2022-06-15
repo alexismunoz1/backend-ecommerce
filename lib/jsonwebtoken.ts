@@ -5,7 +5,7 @@ export function generate(obj: object): string {
    return jwt.sign(obj, JWT_SECRET);
 }
 
-export function decode(token: string): string | null {
+export function decode(token: string) {
    try {
       return jwt.verify(token, JWT_SECRET);
    } catch (err) {

@@ -35,7 +35,20 @@ export async function updateUserAddress(id: string, newData: userAddress) {
    return user.data;
 }
 
-export async function saveOrderInUser(userId: string, order_id: string) {
+export async function saveOrderInUser(userId: string, orderId: string) {
    const user = new User(userId);
-   user.saveNewOrder(order_id);
+   user.saveNewOrder(orderId);
+}
+
+type userOrders = {
+   [x: string]: {
+      status: string;
+      createdAt: string;
+   };
+};
+
+export async function getUserOrders(userId: string): Promise<userOrders> {
+   const user = new User(userId);
+   await user.pull();
+   return user.data.userOrders;
 }

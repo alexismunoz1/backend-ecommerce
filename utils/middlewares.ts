@@ -1,16 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import parseToken from "parse-bearer-token";
+import parseBearerToken from "parse-bearer-token";
 import { decode } from "lib/jsonwebtoken";
 
-export function authMiddleware(callback: Function) {
-   return function (req: NextApiRequest, res: NextApiResponse) {
-      const token = parseToken(req);
-      !token && res.status(401).send({ message: "No token" });
+type Token = {
+   userId: string;
+   iat: number;
+};
 
-      const decodeToken = decode(token as string);
-      if (decodeToken) {
-         callback(req, res, decodeToken);
-      } else {
+export function authMiddleware(callback: Function): Function {
+   return function (req: NextApiRequest, res: NextApiResponse) {
+      try {
+         const token = parseBearerToken(req);
+         if (!token) throw { message: "No token" };
+
+         const decodeToken: Token = decode(token as string);
+         callback(req, res, decodeToken.userId);
+      } catch (err) {
          res.status(401).send({ message: "Invalid token" });
       }
    };

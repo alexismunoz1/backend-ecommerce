@@ -16,14 +16,10 @@ let bodySchema = yup
    .strict();
 
 //permite actualizar un dato puntual de un usuario
-async function patch(
-   req: NextApiRequest,
-   res: NextApiResponse,
-   token: { userId: string }
-) {
+async function patch(req: NextApiRequest, res: NextApiResponse, userId: string) {
    try {
       const userData = await bodySchema.validate(req.body);
-      const resUserData = await updateUserAddress(token.userId, userData);
+      const resUserData = await updateUserAddress(userId, userData);
       res.status(200).send(resUserData);
    } catch (err) {
       res.status(400).send({ err });

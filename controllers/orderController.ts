@@ -36,13 +36,15 @@ export async function createOrder(orderData: OrderData): Promise<string> {
             unit_price,
          },
       ],
-      notification_url: "url_webhook_ipn",
+      notification_url: "url-webhook-ipn",
       back_urls: {
-         success: "url_success",
-         pending: "url_pending",
-         failure: "url_failure",
+         success: "url-success",
+         pending: "url-pending",
+         failure: "url-failure",
       },
    };
 
-   return await createPreference(preference);
+   const { init_point } = await createPreference(preference);
+
+   return init_point;
 }
