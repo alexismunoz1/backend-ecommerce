@@ -38,7 +38,7 @@ export async function createOrder(orderData: OrderData): Promise<string> {
             unit_price,
          },
       ],
-      notification_url: "https://backend-ecommerce-tau.vercel.app/ipn/mercadopago",
+      notification_url: "https://backend-ecommerce-tau.vercel.app/api/ipn/mercadopago",
       back_urls: {
          success: "url-success",
          pending: "url-pending",
