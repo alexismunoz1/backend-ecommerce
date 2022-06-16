@@ -4,12 +4,12 @@ import { authMiddleware } from "utils/middlewares";
 import method from "micro-method-router";
 import * as yup from "yup";
 
-async function get(res: NextApiResponse, userId: string) {
+async function get(req: NextApiRequest, res: NextApiResponse, userId: string) {
    try {
       const userData = await getUserById(userId);
       res.status(200).send(userData);
    } catch (err) {
-      res.status(500).send({ err });
+      res.status(400).send({ err });
    }
 }
 
