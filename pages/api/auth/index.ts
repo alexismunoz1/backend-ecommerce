@@ -3,10 +3,10 @@ import method from "micro-method-router";
 import { sendCode } from "controllers/authController";
 import * as yup from "yup";
 
-const bodySchema = yup.object().shape({ email: yup.string().email().required() });
+const bodySchema = yup
+   .object()
+   .shape({ email: yup.string().email().lowercase().trim().required() });
 
-// permite enviar un codigo de verificacion a un email
-// si en la db no existe un user con ese email, se crea uno
 export async function post(req: NextApiRequest, res: NextApiResponse) {
    try {
       const { email } = await bodySchema.validate(req.body);

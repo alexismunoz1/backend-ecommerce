@@ -1,29 +1,26 @@
-import { Auth } from "models/auth";
-import { User } from "models/user";
-import { generate } from "lib/jsonwebtoken";
 import { sendCodeByEmail } from "lib/sendgrid";
 import addMinutes from "date-fns/addMinutes";
+import { generate } from "lib/jsonwebtoken";
+import { Auth } from "models/auth";
+import { User } from "models/user";
 import gen from "random-seed";
 
 export async function findOrCreateAuth(email: string): Promise<Auth> {
-   const cleanEmail = email.trim().toLowerCase();
-   const auth = await Auth.findByEmail(cleanEmail);
+   const auth = await Auth.findByEmail(email);
 
-   if (auth) {
-      return auth;
-   } else {
-      const newUser = await User.createNewUser({
-         email: cleanEmail,
-      });
+   if (!auth) {
+      const newUser = await User.createNewUser({ email });
 
       const newAuth = await Auth.createNewAuth({
-         email: cleanEmail,
+         email,
          userId: newUser.id,
          code: "",
          expires: new Date(),
       });
 
       return newAuth;
+   } else {
+      return auth;
    }
 }
 
@@ -37,7 +34,6 @@ export async function sendCode(email: string): Promise<boolean> {
    const expires = addMinutes(now, 5);
    auth.data.expires = expires;
 
-   console.log(`Sending code ${code} to ${email}`);
    await sendCodeByEmail(email, code);
    await auth.push();
    return true;
@@ -45,15 +41,10 @@ export async function sendCode(email: string): Promise<boolean> {
 
 export async function checkCode(email: string, code: number): Promise<string> {
    const auth = await Auth.findByEmailAndCode(email, code);
-   if (!auth) {
-      throw "Email and code do not match";
-   }
+   if (!auth) throw "Email and code do not match";
 
    const expired = auth.isCodeExpired();
-   if (expired) {
-      throw "Expired code";
-   }
+   if (expired) throw "Expired code";
 
-   const token = generate({ userId: auth.data.userId });
-   return token;
+   return generate({ userId: auth.data.userId });
 }

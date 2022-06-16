@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { authMiddleware } from "utils/middlewares";
 import { getUserById, updateUserData } from "controllers/userController";
+import { authMiddleware } from "utils/middlewares";
 import method from "micro-method-router";
 import * as yup from "yup";
 
-// permite obtener un usuario con su data mediante su id
-async function get(req: NextApiRequest, res: NextApiResponse, userId: string) {
+async function get(res: NextApiResponse, userId: string) {
    try {
       const userData = await getUserById(userId);
       res.status(200).send(userData);
@@ -20,7 +19,6 @@ const bodyPatchSchema = yup.object().shape({
    userAddress: yup.string().required(),
 });
 
-// permite agregar los datos faltantes (name, phone, address) al usuario
 async function patch(req: NextApiRequest, res: NextApiResponse, userId: string) {
    try {
       const userData = await bodyPatchSchema.validate(req.body);

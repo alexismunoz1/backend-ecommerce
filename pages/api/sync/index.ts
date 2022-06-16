@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { airtableBase } from "lib/airtable";
 import { productsIndex } from "lib/algolia";
 
-export default function (req: NextApiRequest, res: NextApiResponse) {
+export default function (res: NextApiResponse) {
    try {
       airtableBase("Furniture")
          .select({})

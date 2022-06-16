@@ -4,11 +4,10 @@ import method from "micro-method-router";
 import * as yup from "yup";
 
 const bodySchema = yup.object().shape({
-   email: yup.string().email().required(),
+   email: yup.string().email().lowercase().trim().required(),
    code: yup.number().required(),
 });
 
-// permite verificar si el codigo (enviado al email de user) es correcto
 export async function post(req: NextApiRequest, res: NextApiResponse) {
    try {
       const { email, code } = await bodySchema.validate(req.body);

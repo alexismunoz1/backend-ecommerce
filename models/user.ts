@@ -37,6 +37,7 @@ export class User {
    }
 
    async saveNewOrder(orderId: string): Promise<void> {
+      // se guarda el id del order en el usuario
       await this.pull();
       this.data.userOrders = {
          ...this.data.userOrders,
@@ -49,6 +50,7 @@ export class User {
    }
 
    async updateUserOrderStatus(orderId: string, status: "pending" | "paid" | "failure") {
+      // se actualiza el status del order en el usuario
       await this.pull();
       this.data.userOrders[orderId].status = status;
       await this.push();

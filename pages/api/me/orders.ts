@@ -1,9 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { authMiddleware } from "utils/middlewares";
+import type { NextApiResponse } from "next";
 import { getUserOrders } from "controllers/userController";
+import { authMiddleware } from "utils/middlewares";
 import method from "micro-method-router";
 
-async function get(req: NextApiRequest, res: NextApiResponse, userId: string) {
+async function get(res: NextApiResponse, userId: string) {
    try {
       const userOrders = await getUserOrders(userId);
       res.status(200).send({ userOrders });

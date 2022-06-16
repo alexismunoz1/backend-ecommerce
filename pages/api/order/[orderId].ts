@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { authMiddleware } from "utils/middlewares";
 import { getOrderById } from "controllers/orderController";
+import { authMiddleware } from "utils/middlewares";
 import method from "micro-method-router";
 import * as yup from "yup";
 

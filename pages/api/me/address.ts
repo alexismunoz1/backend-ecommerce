@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { updateUserAddress } from "controllers/userController";
 import { authMiddleware } from "utils/middlewares";
 import method from "micro-method-router";
-import { updateUserAddress } from "controllers/userController";
 import * as yup from "yup";
 
 let bodySchema = yup
@@ -15,7 +15,6 @@ let bodySchema = yup
    .noUnknown(true)
    .strict();
 
-//permite actualizar un dato puntual de un usuario
 async function patch(req: NextApiRequest, res: NextApiResponse, userId: string) {
    try {
       const userData = await bodySchema.validate(req.body);

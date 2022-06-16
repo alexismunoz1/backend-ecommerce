@@ -36,13 +36,8 @@ export class Auth {
       return isAfter(now, expires);
    }
 
-   static cleanEmail(email: string): string {
-      return email.trim().toLowerCase();
-   }
-
    static async findByEmail(email: string): Promise<Auth | null> {
-      const cleanEmail = Auth.cleanEmail(email);
-      const result = await collection.where("email", "==", cleanEmail).get();
+      const result = await collection.where("email", "==", email).get();
 
       if (result.docs.length) {
          const auth = new Auth(result.docs[0].id);
@@ -61,9 +56,8 @@ export class Auth {
    }
 
    static async findByEmailAndCode(email: string, code: number): Promise<Auth | null> {
-      const cleanEmail = Auth.cleanEmail(email);
       const result = await collection
-         .where("email", "==", cleanEmail)
+         .where("email", "==", email)
          .where("code", "==", code)
          .get();
 

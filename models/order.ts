@@ -1,14 +1,5 @@
 import { firestore } from "lib/firestore";
 
-type OrderData = {
-   aditionalInfo?: Record<string, string | string[] | number>;
-   productId: string;
-   userId: string;
-   status: "pending" | "success" | "failure";
-   createdAt: string;
-   unit_price: number;
-};
-
 const collection = firestore.collection("orders");
 export class Order {
    ref: FirebaseFirestore.DocumentReference;
@@ -29,15 +20,13 @@ export class Order {
       this.ref.update(this.data);
    }
 
-   static async createNewOrder(newOrderData: OrderData): Promise<{
+   static async createNewOrder(newOrderData: OrderDataModel): Promise<{
       external_reference: string;
    }> {
       const newOrderSnap = await collection.add(newOrderData);
       const newOrder = new Order(newOrderSnap.id);
       newOrder.data = newOrderData;
-      return {
-         external_reference: newOrder.id,
-      };
+      return { external_reference: newOrder.id };
    }
 
    static async getOrder(id: string) {

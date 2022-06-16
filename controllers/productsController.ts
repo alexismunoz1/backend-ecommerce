@@ -17,16 +17,19 @@ type Product = {
 export async function searchProductByName(searchData: SearchParams) {
    const { query, limit, offset } = searchData;
 
+   // primero se busca el item para saber el total de resultados
    const { nbHits: totalProducts } = await productsIndex.search(query, {
       attributesToHighlight: [],
    });
 
+   // se obtiene el offset y limit de la pagina mediante el totalProducts
    const { finalLimit, finalOffset } = getOffsetAndLimitFormReq(
       totalProducts,
       limit,
       offset
    );
 
+   // se busca el item en la base de datos con el offset y limit
    const { hits: products } = await productsIndex.search(query, {
       offset: finalOffset,
       length: finalLimit,
