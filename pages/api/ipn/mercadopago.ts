@@ -9,6 +9,8 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       if (topic == "merchant_order") {
          const order = await updateOrderStatus(id as string);
          res.status(200).send(order);
+      } else {
+         res.status(200).send(req.query);
       }
    } catch (err) {
       res.status(400).send({ err });
