@@ -1,5 +1,4 @@
 import { firestore } from "lib/firestore";
-import { DateLocale } from "yup/lib/locale";
 
 type OrderData = {
    aditionalInfo?: Record<string, string | string[] | number>;
@@ -46,7 +45,7 @@ export class Order {
       return order.data();
    }
 
-   async updateStatus(status: "pending" | "success" | "failure") {
+   async updateOrderStatus(status: "pending" | "paid" | "failure") {
       await this.pull();
       this.data.status = status;
       await this.push();

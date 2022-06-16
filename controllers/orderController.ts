@@ -3,6 +3,7 @@ import { User } from "models/user";
 import { createPreference, getMerchantOrder } from "lib/mercadopago";
 import { getProductById } from "controllers/productsController";
 import { saveOrderInUser } from "controllers/userController";
+import { sendDataPayment } from "lib/sendgrid";
 
 type OrderData = {
    productId: string;
@@ -54,6 +55,19 @@ export async function getOrderById(id: string) {
 }
 
 export async function updateOrderStatus(id: string) {
-   const order = await getMerchantOrder(id);
-   console.log({ order });
+   const { order_status, external_reference } = await getMerchantOrder(id);
+
+   if (order_status == "paid") {
+      const currentOrder = new Order(external_reference);
+      await currentOrder.updateOrderStatus("paid");
+
+      const currentUser = new User(currentOrder.data.userId);
+      await currentUser.updateUserOrderStatus(external_reference, "paid");
+
+      await sendDataPayment(currentOrder.data.email, currentOrder.data.userName);
+
+      return true;
+   } else {
+      return false;
+   }
 }

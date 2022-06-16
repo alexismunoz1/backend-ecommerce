@@ -1,7 +1,7 @@
 import { Auth } from "models/auth";
 import { User } from "models/user";
 import { generate } from "lib/jsonwebtoken";
-import { sendEmail } from "lib/sendgrid";
+import { sendCodeByEmail } from "lib/sendgrid";
 import addMinutes from "date-fns/addMinutes";
 import gen from "random-seed";
 
@@ -38,7 +38,7 @@ export async function sendCode(email: string): Promise<boolean> {
    auth.data.expires = expires;
 
    console.log(`Sending code ${code} to ${email}`);
-   await sendEmail(email, code);
+   await sendCodeByEmail(email, code);
    await auth.push();
    return true;
 }

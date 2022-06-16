@@ -47,4 +47,10 @@ export class User {
       };
       await this.push();
    }
+
+   async updateUserOrderStatus(orderId: string, status: "pending" | "paid" | "failure") {
+      await this.pull();
+      this.data.userOrders[orderId].status = status;
+      await this.push();
+   }
 }
