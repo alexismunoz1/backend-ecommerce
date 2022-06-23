@@ -5,7 +5,29 @@ import { sendDataPayment } from "lib/sendgrid";
 import { Order } from "models/order";
 import { User } from "models/user";
 
-export async function createOrder(orderData: newOrderData): Promise<string> {
+type newOrderData = {
+   productId: string;
+   userId: string;
+   aditionalInfo?: Record<string, string | string[] | number>;
+};
+
+type Preference = {
+   external_reference: string;
+   items: {
+      title: string;
+      quantity: number;
+      currency_id: string;
+      unit_price: number;
+   }[];
+   notification_url: string;
+   back_urls: {
+      success: string;
+   };
+};
+
+export async function createOrder(
+   orderData: newOrderData
+): Promise<{ external_reference: string; init_point: string }> {
    const { productId, userId, aditionalInfo } = orderData;
 
    const { ["Unit cost"]: unit_price, Name } = await getProductById(productId);
@@ -44,7 +66,10 @@ export async function createOrder(orderData: newOrderData): Promise<string> {
 
    const { init_point } = await createPreference(preference);
    // se crea la preferencia en mercadopago y devuelve una url para redirigir realizar la compra
-   return init_point;
+   return {
+      external_reference,
+      init_point,
+   };
 }
 
 export async function getOrderById(id: string) {

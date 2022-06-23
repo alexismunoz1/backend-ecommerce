@@ -1,28 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { updateUserAddress } from "controllers/userController";
-import { authMiddleware } from "utils/middlewares";
+import { valideteMiddleware } from "lib/schemaMiddleware";
+import { authMiddleware } from "lib/authMiddleware";
 import method from "micro-method-router";
 import * as yup from "yup";
 
 let bodySchema = yup
    .object()
    .shape({
-      emial: yup.string(),
-      userName: yup.string(),
-      userPhone: yup.number(),
-      userAddress: yup.string(),
+      emial: yup.string().email().lowercase().trim().optional(),
+      userName: yup.string().optional(),
+      userPhone: yup.number().optional(),
+      userAddress: yup.string().optional(),
    })
    .noUnknown(true)
    .strict();
 
-async function patch(req: NextApiRequest, res: NextApiResponse, userId: string) {
+async function patchAddress(req: NextApiRequest, res: NextApiResponse, userId: string) {
    try {
-      const userData = await bodySchema.validate(req.body);
-      const resUserData = await updateUserAddress(userId, userData);
+      const resUserData = await updateUserAddress(userId, req.body);
       res.status(200).send(resUserData);
-   } catch (err) {
-      res.status(400).send({ err });
+   } catch (error) {
+      res.status(400).send({ error });
    }
 }
 
-export default method({ patch: authMiddleware(patch) });
+const handler = method({ patch: authMiddleware(patchAddress) });
+export default valideteMiddleware(bodySchema, handler, "body");

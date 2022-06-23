@@ -1,5 +1,15 @@
 import { firestore } from "lib/firestore";
 
+type OrderDataModel = {
+   aditionalInfo?: Record<string, string | string[] | number>;
+   productId: string;
+   userId: string;
+   status: "pending" | "success" | "failure";
+   createdAt: string;
+   productName: string;
+   unit_price: number;
+};
+
 const collection = firestore.collection("orders");
 export class Order {
    ref: FirebaseFirestore.DocumentReference;

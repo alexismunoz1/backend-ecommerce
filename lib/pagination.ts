@@ -2,7 +2,7 @@ export function getOffsetAndLimitFormReq(
    totalProducts: number,
    limit: string,
    offset: string,
-   maxLimit: number = 4
+   maxLimit: number = 15
 ) {
    const parceIntLimit = parseInt(limit);
    const parceIntOffset = parseInt(offset);

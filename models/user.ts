@@ -3,7 +3,6 @@ import { firestore } from "lib/firestore";
 const collection = firestore.collection("user");
 
 type userData = {
-   [x: string]: string | string[] | number | undefined;
    email?: string;
    userAddress?: string;
    userName?: string;

@@ -13,6 +13,7 @@ export async function sendCodeByEmail(to: string, code: number): Promise<void> {
       <div style="text-align: center">
          <h2>Código para ingresar</h2> 
          <h1>${code}</h1>
+         <h3>Este código será válido durante los próximos 5 minutos</h3>
       </div>`,
    };
 

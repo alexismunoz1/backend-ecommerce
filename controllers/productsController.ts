@@ -1,22 +1,14 @@
 import { productsIndex } from "lib/algolia";
-import { getOffsetAndLimitFormReq } from "utils/pagination";
+import { getOffsetAndLimitFormReq } from "lib/pagination";
 
-interface SearchParams {
-   query: string;
-   limit: string;
-   offset: string;
-}
-
-type Product = {
+type ProductData = {
    Name: string;
    Images: { url: string }[];
    "Unit cost": number;
    objectID: string;
 };
 
-export async function searchProductByName(searchData: SearchParams) {
-   const { query, limit, offset } = searchData;
-
+export async function searchProductByName(query: string, limit: string, offset: string) {
    // primero se busca el item para saber el total de resultados
    const { nbHits: totalProducts } = await productsIndex.search(query, {
       attributesToHighlight: [],
@@ -40,7 +32,7 @@ export async function searchProductByName(searchData: SearchParams) {
    return { total: products.length, products };
 }
 
-export async function getProductById(id: string): Promise<Product> {
-   const product: Product = await productsIndex.getObject(id);
+export async function getProductById(id: string): Promise<ProductData> {
+   const product: ProductData = await productsIndex.getObject(id);
    return product;
 }

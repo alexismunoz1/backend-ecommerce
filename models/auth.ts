@@ -2,7 +2,6 @@ import { firestore } from "lib/firestore";
 import isAfter from "date-fns/isAfter";
 
 type authData = {
-   [x: string]: string | Date | undefined;
    email?: string;
    userId?: string;
    code?: string;
@@ -61,14 +60,11 @@ export class Auth {
          .where("code", "==", code)
          .get();
 
-      if (result.empty) {
-         return null;
-      } else {
-         const doc = result.docs[0];
-         const auth = new Auth(doc.id);
+      if (result.empty) return null;
 
-         auth.data = doc.data();
-         return auth;
-      }
+      const doc = result.docs[0];
+      const auth = new Auth(doc.id);
+      auth.data = doc.data();
+      return auth;
    }
 }

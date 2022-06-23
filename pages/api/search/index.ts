@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { valideteMiddleware } from "lib/schemaMiddleware";
 import { searchProductByName } from "controllers/productsController";
-import { authMiddleware } from "utils/middlewares";
+import { authMiddleware } from "lib/authMiddleware";
 import method from "micro-method-router";
 import * as yup from "yup";
 
@@ -14,14 +15,19 @@ const querySchema = yup
    .noUnknown(true)
    .strict();
 
-async function get(req: NextApiRequest, res: NextApiResponse) {
+async function getProducts(req: NextApiRequest, res: NextApiResponse) {
    try {
-      const searchData = await querySchema.validate(req.query);
-      const { total, products } = await searchProductByName(searchData);
+      const { query, limit, offset } = req.query;
+      const { total, products } = await searchProductByName(
+         query as string,
+         limit as string,
+         offset as string
+      );
       res.status(200).json({ total, products });
    } catch (err) {
       res.status(500).json({ err });
    }
 }
 
-export default method({ get: authMiddleware(get) });
+const handler = method({ get: authMiddleware(getProducts) });
+export default valideteMiddleware(querySchema, handler, "query");
