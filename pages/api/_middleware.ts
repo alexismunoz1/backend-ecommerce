@@ -11,7 +11,7 @@ export function middleware(req: NextRequest) {
             "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
             "Access-Control-Allow-Headers": req.headers.get(
                "Access-Control-Request-Headers"
-            ),
+            ) as any,
             Vary: "Access-Control-Request-Headers",
             "Content-Length": "0",
          },
