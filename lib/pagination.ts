@@ -1,14 +1,5 @@
-export function getOffsetAndLimitFormReq(
-   totalProducts: number,
-   limit: string,
-   offset: string,
-   maxLimit: number = 15
-) {
-   const parceIntLimit = parseInt(limit);
-   const parceIntOffset = parseInt(offset);
-
+export function getOffsetAndLimitFormReq(limit: number, maxLimit: number = 15) {
    return {
-      finalLimit: parceIntLimit > maxLimit ? maxLimit : parceIntLimit,
-      finalOffset: parceIntOffset >= totalProducts ? 0 : parceIntOffset,
+      finalLimit: limit > maxLimit ? maxLimit : limit,
    };
 }

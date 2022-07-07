@@ -18,12 +18,12 @@ const querySchema = yup
 async function getProducts(req: NextApiRequest, res: NextApiResponse) {
    try {
       const { query, limit, offset } = req.query;
-      const { total, products } = await searchProductByName(
+      const products = await searchProductByName(
          query as string,
          limit as string,
          offset as string
       );
-      res.status(200).json({ total, products });
+      res.status(200).json({ products });
    } catch (err) {
       res.status(500).json({ err });
    }

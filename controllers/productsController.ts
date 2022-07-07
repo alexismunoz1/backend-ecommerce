@@ -1,38 +1,20 @@
 import { productsIndex } from "lib/algolia";
 import { getOffsetAndLimitFormReq } from "lib/pagination";
+import { Product } from "models/product";
 
-type ProductData = {
-   Name: string;
-   Images: { url: string }[];
-   "Unit cost": number;
-   objectID: string;
-};
+export async function searchProductByName(
+   query: string,
+   queryLimit: string,
+   queryOffset: string
+) {
+   const limit = parseInt(queryLimit);
+   const offset = parseInt(queryOffset);
 
-export async function searchProductByName(query: string, limit: string, offset: string) {
-   // primero se busca el item para saber el total de resultados
-   const { nbHits: totalProducts } = await productsIndex.search(query, {
-      attributesToHighlight: [],
-   });
+   const { finalLimit } = getOffsetAndLimitFormReq(limit);
 
-   // se obtiene el offset y limit de la pagina mediante el totalProducts
-   const { finalLimit, finalOffset } = getOffsetAndLimitFormReq(
-      totalProducts,
-      limit,
-      offset
-   );
-
-   // se busca el item en la base de datos con el offset y limit
-   const { hits: products } = await productsIndex.search(query, {
-      offset: finalOffset,
-      length: finalLimit,
-      hitsPerPage: finalLimit,
-      attributesToHighlight: [],
-   });
-
-   return { total: products.length, products };
+   return await Product.getProductByName(query, finalLimit, offset);
 }
 
-export async function getProductById(id: string): Promise<ProductData> {
-   const product: ProductData = await productsIndex.getObject(id);
-   return product;
+export async function getProductById(id: string) {
+   return await Product.getItemById(id);
 }

@@ -22,5 +22,5 @@ async function getProduct(req: NextApiRequest, res: NextApiResponse) {
    }
 }
 
-const handler = method({ post: authMiddleware(getProduct) });
+const handler = method({ get: authMiddleware(getProduct) });
 export default valideteMiddleware(querySchema, handler, "query");
