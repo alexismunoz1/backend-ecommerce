@@ -6,7 +6,7 @@ import method from "micro-method-router";
 async function get(req: NextApiRequest, res: NextApiResponse, userId: string) {
    try {
       const userOrders = await getUserOrders(userId);
-      res.status(200).send({ userOrders });
+      res.status(200).send(userOrders);
    } catch (error) {
       res.status(404).json({ error });
    }

@@ -1,4 +1,3 @@
-import { productsIndex } from "lib/algolia";
 import { getOffsetAndLimitFormReq } from "lib/pagination";
 import { Product } from "models/product";
 

@@ -16,7 +16,7 @@ const querySchema = yup
 async function getOrder(req: NextApiRequest, res: NextApiResponse) {
    try {
       const order = await getOrderById(req.query.orderId as string);
-      res.status(200).send({ order });
+      res.status(200).send(order);
    } catch (error) {
       res.status(404).json({ error });
    }

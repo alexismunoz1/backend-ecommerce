@@ -16,7 +16,7 @@ const querySchema = yup
 async function getProduct(req: NextApiRequest, res: NextApiResponse) {
    try {
       const product = await getProductById(req.query.id as string);
-      res.status(200).json({ product });
+      res.status(200).json(product);
    } catch (err) {
       res.status(404).json({ err });
    }

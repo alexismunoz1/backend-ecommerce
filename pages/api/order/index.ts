@@ -18,7 +18,7 @@ async function postOrder(req: NextApiRequest, res: NextApiResponse, userId: stri
       const productId = req.query.productId as string;
       const aditionalInfo = req.body;
       const initPoint = await createOrder({ productId, userId, aditionalInfo });
-      res.status(200).send({ initPoint });
+      res.status(200).send(initPoint);
    } catch (error) {
       res.status(404).json({ error });
    }

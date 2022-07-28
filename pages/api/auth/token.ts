@@ -16,7 +16,7 @@ const bodySchema = yup
 export async function postToken(req: NextApiRequest, res: NextApiResponse) {
    try {
       const token = await checkCode(req.body.email, req.body.code);
-      res.status(200).send({ token });
+      res.status(200).send(token);
    } catch (error) {
       res.status(400).send({ error });
    }
